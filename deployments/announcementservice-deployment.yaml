@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: announcementservice-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: announcementservice
+  template:
+    metadata:
+      labels:
+        app: announcementservice
+    spec:
+      containers:
+      - name: announcementservice
+        image: salaheddinerossi/announcementservice:latest
+        ports:
+        - containerPort: 8085
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:postgresql://db-postgresql-ams3-30348-do-user-14445709-0.c.db.ondigitalocean.com:25060/defaultdb?useSSL=true&requireSSL=true"
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: authservice-secrets
+              key: datasource-username
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: authservice-secrets
+              key: datasource-password
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: authservice-secrets
+              key: jwt-secret

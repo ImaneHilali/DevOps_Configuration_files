@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authservice-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: authservice
+  template:
+    metadata:
+      labels:
+        app: authservice
+    spec:
+      containers:
+      - name: authservice
+        image: salaheddinerossi/authservice:15
+        ports:
+        - containerPort: 8081
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:postgresql://db-postgresql-ams3-30348-do-user-14445709-0.c.db.ondigitalocean.com:25060/defaultdb?useSSL=true&requireSSL=true"
+        # Other environment variables...
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: authservice-secrets
+              key: datasource-username
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: authservice-secrets
+              key: datasource-password
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: authservice-secrets
+              key: jwt-secret

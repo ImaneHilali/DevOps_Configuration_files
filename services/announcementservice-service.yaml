@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: announcementservice
+spec:
+  selector:
+    app: announcementservice
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8085
